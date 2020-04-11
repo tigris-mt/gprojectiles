@@ -40,6 +40,9 @@ function gprojectiles.register(name, def)
 			local pos = self.object:get_pos()
 			self.old_pos = self.old_pos or pos
 
+			-- Calculate stuff like knockback with old position.
+			self.object:set_pos(self.old_pos)
+
 			local context = gprojectiles.new_context(self)
 
 			for thing in minetest.raycast(self.old_pos, pos, true, true) do
@@ -52,6 +55,9 @@ function gprojectiles.register(name, def)
 					end
 				end
 			end
+
+			-- Restore old position.
+			self.object:set_pos(pos)
 		end,
 	})
 end
