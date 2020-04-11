@@ -47,13 +47,17 @@ function gprojectiles.register(name, def)
 
 			for thing in minetest.raycast(self.old_pos, pos, true, true) do
 				-- Don't collide with self.
-				if not (thing.type == "object" and thing.ref == self.object) then
+				if not (thing.type == "object" and (thing.ref == self.object or thing.ref == self._skip_first)) then
 					def.on_collide(context, thing)
 					-- Don't continue if we got canceled.
 					if self.canceled then
-						return
+						break
 					end
 				end
+			end
+
+			if self._skip_first and (not self._skip_first:get_pos() or vector.distance(vector.divide(vector.add(self.old_pos, pos), 2), self._skip_first:get_pos()) >= 3) then
+				self._skip_first = nil
 			end
 
 			-- Restore old position.
@@ -72,8 +76,8 @@ function gprojectiles.spawn(name, def)
 		pos = nil,
 		-- Direction/velocity.
 		velocity = nil,
-		-- Leave the origin before processing.
-		leave_origin = false,
+		-- Skip this ObjectRef the first time (avoid hitting shooter at start)
+		skip_first = nil,
 		-- Initial data to pass in the context.
 		data = {},
 	}, def)
@@ -83,6 +87,8 @@ function gprojectiles.spawn(name, def)
 		local entity = object:get_luaentity()
 		entity._data = table.copy(def.data)
 		entity._player_blame = def.blame_player
+		entity._skip_first = def.skip_first
+		entity._skip = 2
 
 		object:set_velocity(def.velocity)
 		object:set_acceleration(def.gravity)
