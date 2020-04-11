@@ -56,12 +56,13 @@ function gprojectiles.register(name, def)
 				end
 			end
 
-			if self._skip_first and (not self._skip_first:get_pos() or vector.distance(vector.divide(vector.add(self.old_pos, pos), 2), self._skip_first:get_pos()) >= 3) then
+			if self._skip_first and (not self._skip_first:get_pos() or vector.distance(pos, self._skip_first:get_pos()) >= 3) then
 				self._skip_first = nil
 			end
 
 			-- Restore old position.
 			self.object:set_pos(pos)
+			self.old_pos = pos
 		end,
 	})
 end
