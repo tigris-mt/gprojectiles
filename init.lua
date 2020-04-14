@@ -88,7 +88,7 @@ function gprojectiles.spawn(name, def)
 		local entity = object:get_luaentity()
 		entity._gprojectile = true
 		entity._data = table.copy(def.data)
-		entity._blame = blame
+		entity._blame = def.blame
 		entity._skip_first = def.skip_first
 		entity._skip = 2
 
