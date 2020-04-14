@@ -86,6 +86,7 @@ function gprojectiles.spawn(name, def)
 	local object = minetest.add_entity(vector.add(def.pos, def.leave_origin and vector.normalize(def.velocity) or vector.new()), name)
 	if object then
 		local entity = object:get_luaentity()
+		entity._gprojectile = true
 		entity._data = table.copy(def.data)
 		entity._blame = blame
 		entity._skip_first = def.skip_first
