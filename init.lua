@@ -43,6 +43,12 @@ function gprojectiles.register(name, def)
 			-- Calculate stuff like knockback with old position.
 			self.object:set_pos(self.old_pos)
 
+			if minetest.get_node(self.old_pos).name == "ignore" or minetest.get_node(pos).name == "ignore" then
+				minetest.log("warning", ("[gprojectiles] projectile %s at %s -> %s was out of bounds, deleting"):format(name, minetest.pos_to_string(self.old_pos), minetest.pos_to_string(pos)))
+				self.object:remove()
+				return
+			end
+
 			if not b.box.collide_point(b.WORLD.box, self.old_pos) or not b.box.collide_point(b.WORLD.box, pos) then
 				minetest.log("warning", ("[gprojectiles] projectile %s at %s -> %s was outside world, deleting"):format(name, minetest.pos_to_string(self.old_pos), minetest.pos_to_string(pos)))
 				self.object:remove()
