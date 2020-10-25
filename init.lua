@@ -43,6 +43,12 @@ function gprojectiles.register(name, def)
 			-- Calculate stuff like knockback with old position.
 			self.object:set_pos(self.old_pos)
 
+			if not b.box.collide_point(b.WORLD.box, self.old_pos) or not b.box.collide_point(b.WORLD.box, pos) then
+				minetest.log("warning", ("[gprojectiles] projectile %s at %s -> %s was outside world, deleting"):format(name, minetest.pos_to_string(self.old_pos), minetest.pos_to_string(pos)))
+				self.object:remove()
+				return
+			end
+
 			local context = gprojectiles.new_context(self)
 
 			for thing in minetest.raycast(self.old_pos, pos, true, true) do
